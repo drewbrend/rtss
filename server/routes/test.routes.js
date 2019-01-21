@@ -12,6 +12,6 @@ router.route('/tests').get(TestController.getTests);
 router.route('/tests/:id').get(TestController.getTest);
 
 // Delete a test by _id
-router.route('/posts/:id').delete(TestController.deleteTest);
+router.route('/tests/:id').delete(TestController.deleteTest);
 
 export default router;
