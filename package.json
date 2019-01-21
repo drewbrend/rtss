@@ -1,9 +1,9 @@
 {
-  "name": "@hashnode/mern-starter",
-  "version": "2.4.0",
-  "description": "Boilerplate project for building Isomorphic apps using React and Redux",
+  "name": "rtss",
+  "version": "0.0.1",
+  "description": "Service for viewing and managing test results",
   "scripts": {
-    "test": "cross-env NODE_ENV=test PORT=8080 MONGO_URL=mongodb://localhost:27017/mern-test node_modules/.bin/nyc node node_modules/ava/cli.js",
+    "test": "cross-env NODE_ENV=test PORT=8080 MONGO_URL=mongodb://localhost:27017/test-results node_modules/.bin/nyc node node_modules/ava/cli.js",
     "watch:test": "npm run test -- --watch",
     "cover": "nyc npm run test",
     "check-coverage": "nyc check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
@@ -22,13 +22,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Hashnode/mern-starter.git"
+    "url": "git+https://github.com/drewbrend/rtss.git"
   },
-  "bugs": {
-    "url": "https://github.com/Hashnode/mern-starter/issues"
-  },
-  "homepage": "https://github.com/Hashnode/mern-starter#readme",
-  "author": "Prashant Abhishek <prashant.abhishek7g@gmail.com>, Mayank Chandola <imayankchd@gmail.com>, Sandeep Panda <sandeep@hashnode.com>, Syed Fazle Rahman <fazle@hashnode.com>, Alkshendra Maurya <alkshendra@hashnode.com>",
+  "homepage": "https://github.com/drewbrend/rtss#readme",
+  "author": "Brendan Drew <brendan.drew@plangrid.com>, Graeme Harvey <graeme@plangrid.com>",
   "license": "MIT",
   "dependencies": {
     "babel-core": "^6.26.0",
