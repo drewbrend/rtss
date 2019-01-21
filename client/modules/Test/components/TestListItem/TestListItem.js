@@ -25,7 +25,7 @@ function TestListItem(props) {
 
 TestListItem.propTypes = {
   test: PropTypes.shape({
-    _id: PropTypes.number.isRequired,
+    _id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     isStable: PropTypes.bool.isRequired,
