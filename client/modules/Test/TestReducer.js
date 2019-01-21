@@ -30,7 +30,7 @@ const TestReducer = (state = initialState, action) => {
 // Get all tests
 export const getTests = state => state.tests.data;
 
-// Get test by cuid
+// Get test by id
 export const getTest = (state, id) => state.tests.data.filter(test => test.id === id)[0];
 
 // Export Reducer
