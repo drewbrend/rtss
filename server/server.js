@@ -4,9 +4,11 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import path from 'path';
 import IntlWrapper from '../client/modules/Intl/IntlWrapper';
+const fileUpload = require('express-fileupload');
 
 // Initialize the Express App
 const app = new Express();
+app.use(fileUpload());
 
 // Set Development modes checks
 const isDevMode = process.env.NODE_ENV === 'development' || false;
@@ -47,6 +49,8 @@ import routes from '../client/routes';
 import { fetchComponentData } from './util/fetchData';
 import posts from './routes/post.routes';
 import tests from './routes/test.routes';
+import results from './routes/result.routes';
+import runs from './routes/run.routes';
 import dummyData from './dummyData';
 import serverConfig from './config';
 
@@ -73,6 +77,8 @@ app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist/client')));
 app.use('/api', posts);
 app.use('/api', tests);
+app.use('/api', results);
+app.use('/api', runs);
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {
