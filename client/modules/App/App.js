@@ -57,7 +57,7 @@ export class App extends Component {
           <Header
             switchLanguage={lang => this.props.dispatch(switchLanguage(lang))}
             intl={this.props.intl}
-            toggleAddPost={this.toggleAddPostSection}
+            toggleAddTest={this.toggleAddTestSection}
           />
           <div className={styles.container}>
             {this.props.children}

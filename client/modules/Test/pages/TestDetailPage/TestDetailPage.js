@@ -19,8 +19,8 @@ export function TestDetailPage(props) {
       <Helmet title={props.test.name} />
       <div className={`${styles['single-test']} ${styles['test-detail']}`}>
         <h3 className={styles['test-title']}>{props.test.name}</h3>
-        <p className={styles['author-name']}><FormattedMessage id="testType" /> {props.test.name}</p>
-        <p className={styles['author-name']}><FormattedMessage id="testStability" /> {props.test.name}</p>
+        <p className={styles['author-name']}><FormattedMessage id="testType" /> {props.test.type}</p>
+        <p className={styles['author-name']}><FormattedMessage id="testStability" /> {props.test.isStable.toString()}</p>
         <p className={styles['test-desc']}>{props.test.lastUpdated}</p>
       </div>
     </div>
@@ -29,19 +29,19 @@ export function TestDetailPage(props) {
 
 // Actions required to provide data for this component to render in server side.
 TestDetailPage.need = [params => {
-  return fetchTest(params.id);
+  return fetchTest(params._id);
 }];
 
 // Retrieve data from store as props
 function mapStateToProps(state, props) {
   return {
-    test: getTest(state, props.params.id),
+    test: getTest(state, props.params._id),
   };
 }
 
 TestDetailPage.propTypes = {
   test: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    _id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     isStable: PropTypes.bool.isRequired,
