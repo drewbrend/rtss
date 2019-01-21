@@ -5,19 +5,27 @@ import PropTypes from 'prop-types';
 import TestListItem from './TestListItem/TestListItem';
 
 function TestList(props) {
-  return (
-    <div className="listView">
-      {
-        props.posts.map(test => (
-          <TestListItem
-            test={test}
-            key={test.id}
-            onDelete={() => props.handleDeleteTest(test.id)}
-          />
-        ))
-      }
-    </div>
-  );
+  if (!props.tests) {
+    return (
+      <div className="emptyTestList">
+        <p>There are currently no tests in the DB.</p>
+      </div>);
+  // eslint-disable-next-line no-else-return
+  } else {
+    return (
+      <div className="listView">
+        {
+          props.tests.map(test => (
+            <TestListItem
+              test={test}
+              key={test.id}
+              onDelete={() => props.handleDeleteTest(test.id)}
+            />
+          ))
+        }
+      </div>
+    );
+  }
 }
 
 TestList.propTypes = {

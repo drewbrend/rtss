@@ -2,6 +2,7 @@ export default {
   locale: 'en',
   messages: {
     siteTitle: 'Test Result Viewer',
+    GitHub: 'GitHub',
     addTest: 'Add Test',
     switchLanguage: 'Switch Language',
     twitterMessage: 'We are on Twitter',
