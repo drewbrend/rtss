@@ -22,7 +22,7 @@ export class TestCreateWidget extends Component {
       <div className={cls}>
         <div className={styles['form-content']}>
           <h2 className={styles['form-title']}><FormattedMessage id="createNewTest" /></h2>
-          <input placeholder={this.props.intl.messages.testTitle} className={styles['form-field']} ref="name" />
+          <input placeholder={this.props.intl.messages.testName} className={styles['form-field']} ref="name" />
           <input placeholder={this.props.intl.messages.testType} className={styles['form-field']} ref="type" />
           <input placeholder={this.props.intl.messages.testStability} className={styles['form-field']} ref="isStable" />
           <a className={styles['test-submit-button']} href="#" onClick={this.addTest}><FormattedMessage id="submit" /></a>
