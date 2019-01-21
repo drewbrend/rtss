@@ -6,8 +6,8 @@ export default function () {
       return;
     }
 
-    const test1 = new Test({ name: 'Dummy Test 1', type: 'Cypress Test 1', isStable: true });
-    const test2 = new Test({ name: 'Dummy Test 2', type: 'API Test 1', isStable: false });
+    const test1 = new Test({ name: 'Dummy Test 1', type: 'Cypress Test', isStable: true });
+    const test2 = new Test({ name: 'Dummy Test 2', type: 'API Test', isStable: false });
 
     Test.create([test1, test2], (error) => {
       if (!error) {
