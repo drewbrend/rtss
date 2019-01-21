@@ -1,4 +1,5 @@
 import Test from '../models/test';
+import sanitizeHtml from 'sanitize-html';
 const ObjectID = require('mongodb').ObjectID;
 
 /**
@@ -43,6 +44,32 @@ export function getTest(req, res) {
       res.status(500).send(err);
     }
     res.json({ test });
+  });
+}
+
+/**
+ * Save a test
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function addTest(req, res) {
+  if (!req.body.test.name || !req.body.test.type || !req.body.test.isStable) {
+    res.status(403).end();
+  }
+
+  const newTest = new Test(req.body.test);
+
+  // Let's sanitize inputs
+  newTest.name = sanitizeHtml(newTest.name);
+  newTest.type = sanitizeHtml(newTest.type);
+  newTest.isStable = sanitizeHtml(newTest.isStable);
+
+  newTest.save((err, saved) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+    res.json({ post: saved });
   });
 }
 

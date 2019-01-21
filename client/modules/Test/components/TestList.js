@@ -18,8 +18,9 @@ function TestList(props) {
           props.tests.map(test => (
             <TestListItem
               test={test}
-              key={test.id}
-              onDelete={() => props.handleDeleteTest(test.id)}
+              key={test._id}
+              isStable={test.isStable}
+              onDelete={() => props.handleDeleteTest(test._id)}
             />
           ))
         }
@@ -30,7 +31,7 @@ function TestList(props) {
 
 TestList.propTypes = {
   tests: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    _id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     isStable: PropTypes.bool.isRequired,

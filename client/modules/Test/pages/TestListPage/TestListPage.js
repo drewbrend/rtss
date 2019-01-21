@@ -53,6 +53,7 @@ function mapStateToProps(state) {
 
 TestListPage.propTypes = {
   tests: PropTypes.arrayOf(PropTypes.shape({
+    _id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     isStable: PropTypes.bool.isRequired,
