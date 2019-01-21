@@ -1,6 +1,37 @@
 import TestRun from '../models/testRun';
+import sanitizeHtml from 'sanitize-html';
 const parser = require('xml2json');
 const ObjectID = require('mongodb').ObjectID;
+
+function handleResultJson(resultJson) {
+  const ids = [];
+  resultJson.testsuites.forEach(testsuite => {
+    testsuite.testcase.forEach(testcase => {
+      let testResult;
+      // TODO: skipped test?
+      if (testcase.failure) {
+        testResult = 'failure';
+      } else {
+        testResult = 'success';
+      }
+
+      // TODO: failure message should be sent somehow
+
+      fetch('/api/results', { method: 'POST', body: {
+        testName: testcase.name,
+        result: testResult,
+        duration: testcase.time * 1000, // seconds -> milliseconds
+      } })
+      .then(res => res.json())
+      .then(json => {
+        ids.push(json.result._id);
+      });
+    });
+  });
+
+  // TODO: this will probably not return all the ids because async
+  return ids;
+}
 
 /**
  * Get all runs
@@ -59,41 +90,33 @@ export function addRun(req, res) {
   }
 
   const fileNames = Object.keys(req.files);
-
-  let response = {};
-
-  response.message = "here's some data";
-  response.numFiles = fileNames.length;
+  let ids;
 
   for (let i = 0; i < fileNames.length; i++) {
     const fileName = fileNames[i];
     const fileBuffer = req.files[fileName].data;
     const json = parser.toJson(fileBuffer);
 
-    response[fileName] = json;
+    const newIds = handleResultJson(json);
+    ids = ids.concat(newIds);
   }
 
-  return res.status(200).send(response);
+  const newResult = new TestRun({
+    results: ids,
+    job: req.body.run.result,
+    runDate: req.body.run.duration * 1000, // seconds -> milliseconds
+  });
 
-  // if (!req.body.post.name || !req.body.post.title || !req.body.post.content) {
-  //   res.status(403).end();
-  // }
+  newResult.job = sanitizeHtml(newResult.job);
 
-  // const newPost = new TestRun(req.body.post);
+  newResult.save((err, saved) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+    res.json({ run: saved });
+  });
 
-  // // Let's sanitize inputs
-  // newPost.title = sanitizeHtml(newPost.title);
-  // newPost.name = sanitizeHtml(newPost.name);
-  // newPost.content = sanitizeHtml(newPost.content);
-
-  // newPost.slug = slug(newPost.title.toLowerCase(), { lowercase: true });
-  // newPost.cuid = cuid();
-  // newPost.save((err, saved) => {
-  //   if (err) {
-  //     res.status(500).send(err);
-  //   }
-  //   res.json({ post: saved });
-  // });
+  return res.status(200).end();
 }
 
 /**
