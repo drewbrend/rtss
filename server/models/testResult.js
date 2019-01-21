@@ -8,4 +8,4 @@ const testResultSchema = new Schema({
   lastUpdated: { type: 'Date', default: Date.now, required: true },
 });
 
-export default mongoose.model('Post', testResultSchema);
+export default mongoose.model('TestResult', testResultSchema);
