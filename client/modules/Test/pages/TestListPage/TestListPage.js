@@ -25,9 +25,9 @@ class TestListPage extends Component {
     }
   };
 
-  handleAddTest = (name, title, content) => {
+  handleAddTest = (name, type, isStable) => {
     this.props.dispatch(toggleAddTest());
-    this.props.dispatch(addTestRequest({ name, title, content }));
+    this.props.dispatch(addTestRequest({ name, type, isStable }));
   };
 
   render() {
@@ -54,6 +54,8 @@ function mapStateToProps(state) {
 TestListPage.propTypes = {
   tests: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    isStable: PropTypes.bool.isRequired,
     lastUpdated: PropTypes.instanceOf(Date),
   })).isRequired,
   showAddTest: PropTypes.bool.isRequired,

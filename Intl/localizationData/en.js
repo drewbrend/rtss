@@ -10,6 +10,7 @@ export default {
     testType: 'Test Type:',
     testName: 'Test Name:',
     testStability: 'Test Stability:',
+    lastUpdated: 'Last Updated:',
     submit: 'Submit',
     comment: `user {name} {value, plural,
     	  =0 {does not have any comments}

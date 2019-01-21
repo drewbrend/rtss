@@ -32,7 +32,7 @@ export default (
       }}
     />
     <Route
-      path="/tests/:slug-:cuid"
+      path="/tests/:id"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
           cb(null, require('./modules/Test/pages/TestDetailPage/TestDetailPage').default);

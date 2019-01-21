@@ -10,12 +10,13 @@ function TestListItem(props) {
   return (
     <div className={styles['single-test']}>
       <h3 className={styles['test-title']}>
-        <Link to={`/tests/${props.test.slug}-${props.test.cuid}`} >
-          {props.test.title}
+        <Link to={`/tests/${props.test.id}`} >
+          {props.test.name}
         </Link>
       </h3>
-      <p className={styles['author-name']}><FormattedMessage id="by" /> {props.test.name}</p>
-      <p className={styles['test-desc']}>{props.test.content}</p>
+      <p className={styles['author-name']}><FormattedMessage id="testType" /> {props.test.type}</p>
+      <p className={styles['author-name']}><FormattedMessage id="testStability" /> {props.test.isStable}</p>
+      <p className={styles['author-name']}><FormattedMessage id="lastUpdated" /> {props.test.lastUpdated}</p>
       <p className={styles['test-action']}><a href="#" onClick={props.onDelete}><FormattedMessage id="deleteTest" /></a></p>
       <hr className={styles.divider} />
     </div>
@@ -24,11 +25,11 @@ function TestListItem(props) {
 
 TestListItem.propTypes = {
   test: PropTypes.shape({
+    id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
-    slug: PropTypes.string.isRequired,
-    cuid: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    isStable: PropTypes.bool.isRequired,
+    lastUpdated: PropTypes.instanceOf(Date).isRequired,
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
 };
