@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
+import moment from 'moment';
 
 // Import Style
 import styles from '../../components/TestListItem/TestListItem.css';
@@ -21,7 +22,7 @@ export function TestDetailPage(props) {
         <h3 className={styles['test-title']}>{props.test.name}</h3>
         <p className={styles['author-name']}><FormattedMessage id="testType" /> {props.test.type}</p>
         <p className={styles['author-name']}><FormattedMessage id="testStability" /> {props.test.isStable.toString()}</p>
-        <p className={styles['test-desc']}>{props.test.lastUpdated}</p>
+        <p className={styles['test-desc']}>{moment(props.test.lastUpdated).format('MMMM Do YYYY, h:mm a')}</p>
       </div>
     </div>
   );
@@ -45,7 +46,7 @@ TestDetailPage.propTypes = {
     name: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     isStable: PropTypes.bool.isRequired,
-    lastUpdated: PropTypes.instanceOf(Date).isRequired,
+    lastUpdated: PropTypes.string.isRequired,
   }).isRequired,
 };
 

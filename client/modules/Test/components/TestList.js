@@ -35,7 +35,7 @@ TestList.propTypes = {
     name: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     isStable: PropTypes.bool.isRequired,
-    lastUpdated: PropTypes.instanceOf(Date).isRequired,
+    lastUpdated: PropTypes.string.isRequired,
   })).isRequired,
   handleDeleteTest: PropTypes.func.isRequired,
 };

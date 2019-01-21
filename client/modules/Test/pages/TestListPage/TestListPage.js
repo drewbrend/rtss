@@ -57,7 +57,7 @@ TestListPage.propTypes = {
     name: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     isStable: PropTypes.bool.isRequired,
-    lastUpdated: PropTypes.instanceOf(Date),
+    lastUpdated: PropTypes.string,
   })).isRequired,
   showAddTest: PropTypes.bool.isRequired,
   dispatch: PropTypes.func.isRequired,
