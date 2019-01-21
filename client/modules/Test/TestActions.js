@@ -18,8 +18,8 @@ export function addTestRequest(test) {
     return callApi('tests', 'post', {
       test: {
         name: test.name,
-        title: test.title,
-        content: test.content,
+        type: test.type,
+        isStable: test.isStable,
       },
     }).then(res => dispatch(addTest(res.test)));
   };
