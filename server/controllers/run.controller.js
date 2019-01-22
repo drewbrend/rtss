@@ -63,21 +63,6 @@ function handleResultJson(resultJson) {
 }
 
 /**
- * Get all runs
- * @param req
- * @param res
- * @returns void
- */
-export function getAllRuns(req, res) {
-  TestRun.find().sort('-runDate').exec((err, runs) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-    res.json({ runs });
-  });
-}
-
-/**
  * Get runs
  * @param req
  * @param res

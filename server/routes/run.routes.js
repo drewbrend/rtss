@@ -2,9 +2,6 @@ import { Router } from 'express';
 import * as RunController from '../controllers/run.controller';
 const router = new Router();
 
-// Get all Run
-router.route('/runs/all').get(RunController.getAllRuns);
-
 // Get Runs
 router.route('/runs').get(RunController.getRuns);
 

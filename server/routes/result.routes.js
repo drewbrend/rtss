@@ -2,9 +2,6 @@ import { Router } from 'express';
 import * as ResultController from '../controllers/result.controller';
 const router = new Router();
 
-// Get all Results
-router.route('/results/all').get(ResultController.getAllResults);
-
 // Get Results
 router.route('/results').get(ResultController.getResults);
 

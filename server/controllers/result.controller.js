@@ -3,21 +3,6 @@ const resultHelper = require('./helpers/resultHelper');
 const ObjectID = require('mongodb').ObjectID;
 
 /**
- * Get all results
- * @param req
- * @param res
- * @returns void
- */
-export function getAllResults(req, res) {
-  TestResult.find().exec((err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-    res.json({ results });
-  });
-}
-
-/**
  * Get results
  * @param req
  * @param res
