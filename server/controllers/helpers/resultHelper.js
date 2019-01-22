@@ -2,7 +2,7 @@ import sanitizeHtml from 'sanitize-html';
 import TestResult from '../../models/testResult';
 const testHelper = require('./testHelper');
 
-exports.addResult = (result, callback) => {
+exports.addResult = (result) => {
   const test = {
     name: result.testName,
     // TODO: get type from result
@@ -11,23 +11,29 @@ exports.addResult = (result, callback) => {
     lastUpdated: Date.now(),
   };
 
-  // addTest will return an existing tests, if there is one
-  testHelper.addTest(test, (testErr, savedTest) => {
-    if (testErr) {
-      // TODO: handle error better
-      console.log(testErr);
-    }
+  return new Promise((resolve, reject) => {
+    // addTest will return an existing tests, if there is one
+    testHelper.addTest(test).then(savedTest => {
+      console.log(`returned test ${JSON.stringify(savedTest.name)} from addTest`);
 
-    const newResult = new TestResult({
-      test: savedTest._id,
-      result: result.result,
-      duration: result.duration * 1000, // seconds -> milliseconds
-    });
+      const newResult = new TestResult({
+        test: savedTest._id,
+        result: result.result,
+        duration: result.duration * 1000, // seconds -> milliseconds
+      });
 
-    newResult.result = sanitizeHtml(newResult.result);
+      newResult.result = sanitizeHtml(newResult.result);
 
-    newResult.save((err, saved) => {
-      callback(err, saved);
+      newResult.save((err, saved) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(saved);
+        }
+      });
+    })
+    .catch(err => {
+      reject(err);
     });
   });
 };

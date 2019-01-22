@@ -3,6 +3,31 @@ import sanitizeHtml from 'sanitize-html';
 const resultHelper = require('./helpers/resultHelper');
 const parser = require('xml2json');
 const ObjectID = require('mongodb').ObjectID;
+const flattenDeep = require('lodash.flattendeep');
+
+function handleTestCase(testcase) {
+  let testResult;
+  // TODO: skipped test?
+  if (testcase.failure) {
+    testResult = 'failure';
+  } else {
+    testResult = 'success';
+  }
+
+  // TODO: failure message should be sent somehow
+
+  return new Promise((resolve, reject) => {
+    resultHelper.addResult({
+      testName: testcase.name,
+      result: testResult,
+      duration: testcase.time * 1000, // seconds -> milliseconds
+    }).then(result => {
+      resolve(result._id);
+    }).catch(err => {
+      reject(err);
+    });
+  });
+}
 
 function handleResultJson(resultJson) {
   console.log(resultJson);
@@ -12,49 +37,31 @@ function handleResultJson(resultJson) {
     suites = [resultJson.testsuites];
   }
 
-  const ids = [];
-  suites.forEach(testsuite => {
-    testsuite.testsuite.forEach(suite => {
-      if (!suite.testcase) {
-        return;
-      }
-
-      let cases = suite.testcase;
-      if (!Array.isArray(suite.testcase)) {
-        cases = [suite.testcase];
-      }
-
-      cases.forEach(testcase => {
-        let testResult;
-        // TODO: skipped test?
-        if (testcase.failure) {
-          testResult = 'failure';
-        } else {
-          testResult = 'success';
+  return new Promise((resolve, reject) => {
+    const promises = [];
+    suites.forEach(testsuite => {
+      testsuite.testsuite.forEach(suite => {
+        if (!suite.testcase) {
+          return;
         }
 
-        // TODO: failure message should be sent somehow
+        let cases = suite.testcase;
+        if (!Array.isArray(suite.testcase)) {
+          cases = [suite.testcase];
+        }
 
-        resultHelper.addResult({
-          testName: testcase.name,
-          result: testResult,
-          duration: testcase.time * 1000, // seconds -> milliseconds
-        }, (err, saved) => {
-          if (err) {
-            // TODO: handle error better
-            console.log(err);
-          }
-
-          if (saved) {
-            ids.push(saved._id);
-          }
+        cases.forEach(testcase => {
+          promises.push(handleTestCase(testcase));
         });
       });
     });
-  });
 
-  // TODO: this will probably not return all the ids because async
-  return ids;
+    Promise.all(promises).then(ids => {
+      resolve(ids);
+    }).catch(errs => {
+      reject(errs);
+    });
+  });
 }
 
 /**
@@ -99,30 +106,45 @@ export function addRun(req, res) {
   }
 
   const fileNames = Object.keys(req.files);
-  let ids = [];
+  const promises = [];
 
   for (let i = 0; i < fileNames.length; i++) {
     const fileName = fileNames[i];
     const fileBuffer = req.files[fileName].data;
     const json = parser.toJson(fileBuffer);
 
-    const newIds = handleResultJson(JSON.parse(json));
-    ids = ids.concat(newIds);
+    promises.push(handleResultJson(JSON.parse(json)));
   }
 
-  const newResult = new TestRun({
-    results: ids,
-    job: 'TODO: add job info and duration',
-    runDate: 13.7656 * 1000, // seconds -> milliseconds
-  });
+  Promise.all(promises).then(ids => {
+    const flatIds = flattenDeep(ids);
+    console.log(`ids: ${flatIds}`);
 
-  newResult.job = sanitizeHtml(newResult.job);
+    const newResult = new TestRun({
+      results: flatIds,
+      job: 'TODO: add job info and duration',
+      runDate: Date.now(),
+    });
 
-  newResult.save((err, saved) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-    res.json({ run: saved });
+    console.log('created newResult object');
+
+    newResult.job = sanitizeHtml(newResult.job);
+
+    console.log('sanitized newResult job');
+
+    newResult.save((err, saved) => {
+      console.log('newResult saved');
+
+      if (err) {
+        console.log(`newResult error, returning 500: ${err}`);
+        res.status(500).send(err);
+      }
+
+      console.log(`newResult success, returning: ${JSON.stringify(saved)}`);
+      res.json({ run: saved });
+    });
+  }).catch(errs => {
+    res.status(500).send(errs);
   });
 }
 

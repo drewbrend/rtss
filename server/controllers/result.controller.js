@@ -43,11 +43,10 @@ export function addResult(req, res) {
     res.status(400).end();
   }
 
-  resultHelper.addResult(req.body.result, (err, saved) => {
-    if (err) {
-      res.status(500).send(err);
-    }
+  resultHelper.addResult(req.body.result).then(saved => {
     res.json({ result: saved });
+  }).catch(err => {
+    res.status(500).send(err);
   });
 }
 
