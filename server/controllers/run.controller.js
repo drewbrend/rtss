@@ -30,8 +30,6 @@ function handleTestCase(testcase) {
 }
 
 function handleResultJson(resultJson) {
-  console.log(resultJson);
-
   let suites = resultJson.testsuites;
   if (!Array.isArray(resultJson.testsuites)) {
     suites = [resultJson.testsuites];
@@ -118,7 +116,6 @@ export function addRun(req, res) {
 
   Promise.all(promises).then(ids => {
     const flatIds = flattenDeep(ids);
-    console.log(`ids: ${flatIds}`);
 
     const newResult = new TestRun({
       results: flatIds,
@@ -126,21 +123,13 @@ export function addRun(req, res) {
       runDate: Date.now(),
     });
 
-    console.log('created newResult object');
-
     newResult.job = sanitizeHtml(newResult.job);
 
-    console.log('sanitized newResult job');
-
     newResult.save((err, saved) => {
-      console.log('newResult saved');
-
       if (err) {
-        console.log(`newResult error, returning 500: ${err}`);
         res.status(500).send(err);
       }
 
-      console.log(`newResult success, returning: ${JSON.stringify(saved)}`);
       res.json({ run: saved });
     });
   }).catch(errs => {
