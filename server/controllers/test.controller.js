@@ -26,11 +26,10 @@ export function getAllTests(req, res) {
  * @returns void
  */
 export function getTests(req, res) {
-  testHelper.getTests(req.body, (err, tests) => {
-    if (err) {
-      res.status(500).send(err);
-    }
+  testHelper.getTests(req.body).then(tests => {
     res.json({ tests });
+  }).catch(err => {
+    res.status(500).send(err);
   });
 }
 
@@ -60,11 +59,10 @@ export function addTest(req, res) {
     res.status(403).end();
   }
 
-  testHelper.addTest(res.body.test, (err, saved) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-    res.json({ post: saved });
+  testHelper.addTest(res.body.test).then(saved => {
+    res.json({ test: saved });
+  }).catch(err => {
+    res.status(500).send(err);
   });
 }
 
