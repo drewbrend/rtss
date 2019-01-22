@@ -2,21 +2,6 @@ import Test from '../models/test';
 const testHelper = require('./helpers/testHelper');
 const ObjectID = require('mongodb').ObjectID;
 
-/**
- * Get all tests
- * @param req
- * @param res
- * @returns void
- */
-export function getAllTests(req, res) {
-  testHelper.getTests({}, (err, tests) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-    res.json({ tests });
-  });
-}
-
 // TODO: Check if you can pass empty body to this to get all tests
 // If so, delete getAllTests()
 /**
