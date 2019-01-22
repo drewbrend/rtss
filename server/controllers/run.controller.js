@@ -1,5 +1,6 @@
 import TestRun from '../models/testRun';
 import sanitizeHtml from 'sanitize-html';
+const resultHelper = require('./helpers/resultHelper');
 const parser = require('xml2json');
 const ObjectID = require('mongodb').ObjectID;
 
@@ -34,14 +35,19 @@ function handleResultJson(resultJson) {
 
         // TODO: failure message should be sent somehow
 
-        fetch('/api/results', { method: 'POST', body: {
+        resultHelper.addResult({
           testName: testcase.name,
           result: testResult,
           duration: testcase.time * 1000, // seconds -> milliseconds
-        } })
-        .then(res => res.json())
-        .then(json => {
-          ids.push(json.result._id);
+        }, (err, saved) => {
+          if (err) {
+            // TODO: handle error better
+            console.log(err);
+          }
+
+          if (saved) {
+            ids.push(saved._id);
+          }
         });
       });
     });
@@ -104,7 +110,7 @@ export function getRun(req, res) {
  */
 export function addRun(req, res) {
   if (Object.keys(req.files).length === 0) {
-    return res.status(400).send('No files were uploaded.');
+    res.status(400).send('No files were uploaded.');
   }
 
   const fileNames = Object.keys(req.files);
@@ -133,8 +139,6 @@ export function addRun(req, res) {
     }
     res.json({ run: saved });
   });
-
-  return res.status(200).end();
 }
 
 /**
