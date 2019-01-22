@@ -4,27 +4,45 @@ const parser = require('xml2json');
 const ObjectID = require('mongodb').ObjectID;
 
 function handleResultJson(resultJson) {
+  console.log(resultJson);
+
+  let suites = resultJson.testsuites;
+  if (!Array.isArray(resultJson.testsuites)) {
+    suites = [resultJson.testsuites];
+  }
+
   const ids = [];
-  resultJson.testsuites.forEach(testsuite => {
-    testsuite.testcase.forEach(testcase => {
-      let testResult;
-      // TODO: skipped test?
-      if (testcase.failure) {
-        testResult = 'failure';
-      } else {
-        testResult = 'success';
+  suites.forEach(testsuite => {
+    testsuite.testsuite.forEach(suite => {
+      if (!suite.testcase) {
+        return;
       }
 
-      // TODO: failure message should be sent somehow
+      let cases = suite.testcase;
+      if (!Array.isArray(suite.testcase)) {
+        cases = [suite.testcase];
+      }
 
-      fetch('/api/results', { method: 'POST', body: {
-        testName: testcase.name,
-        result: testResult,
-        duration: testcase.time * 1000, // seconds -> milliseconds
-      } })
-      .then(res => res.json())
-      .then(json => {
-        ids.push(json.result._id);
+      cases.forEach(testcase => {
+        let testResult;
+        // TODO: skipped test?
+        if (testcase.failure) {
+          testResult = 'failure';
+        } else {
+          testResult = 'success';
+        }
+
+        // TODO: failure message should be sent somehow
+
+        fetch('/api/results', { method: 'POST', body: {
+          testName: testcase.name,
+          result: testResult,
+          duration: testcase.time * 1000, // seconds -> milliseconds
+        } })
+        .then(res => res.json())
+        .then(json => {
+          ids.push(json.result._id);
+        });
       });
     });
   });
@@ -90,21 +108,21 @@ export function addRun(req, res) {
   }
 
   const fileNames = Object.keys(req.files);
-  let ids;
+  let ids = [];
 
   for (let i = 0; i < fileNames.length; i++) {
     const fileName = fileNames[i];
     const fileBuffer = req.files[fileName].data;
     const json = parser.toJson(fileBuffer);
 
-    const newIds = handleResultJson(json);
+    const newIds = handleResultJson(JSON.parse(json));
     ids = ids.concat(newIds);
   }
 
   const newResult = new TestRun({
     results: ids,
-    job: req.body.run.result,
-    runDate: req.body.run.duration * 1000, // seconds -> milliseconds
+    job: 'TODO: add job info and duration',
+    runDate: 13.7656 * 1000, // seconds -> milliseconds
   });
 
   newResult.job = sanitizeHtml(newResult.job);
