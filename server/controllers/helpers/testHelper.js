@@ -16,8 +16,6 @@ exports.getTests = (body) => {
 exports.addTest = (test) => {
   return new Promise((resolve, reject) => {
     exports.getTests({ name: test.name }).then(tests => {
-      console.log(`returned ids ${tests.map(t => t._id)} from getTest for ${test.name}`);
-
       if (tests.length > 0) {
         // we have the test, take the first one in the event of duplicates
         resolve(tests[0]);

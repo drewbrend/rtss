@@ -14,8 +14,6 @@ exports.addResult = (result) => {
   return new Promise((resolve, reject) => {
     // addTest will return an existing tests, if there is one
     testHelper.addTest(test).then(savedTest => {
-      console.log(`returned test ${JSON.stringify(savedTest.name)} from addTest`);
-
       const newResult = new TestResult({
         test: savedTest._id,
         result: result.result,
