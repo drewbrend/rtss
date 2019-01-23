@@ -3,10 +3,11 @@ import TestResult from '../../models/testResult';
 const testHelper = require('./testHelper');
 
 exports.addResult = (result) => {
+  const testType = result.type ? result.type : 'Unknown';
+
   const test = {
     name: result.testName,
-    // TODO: get type from result
-    type: 'Cypress',
+    type: testType,
     isStable: true, // We'll assume a new test is stable
     lastUpdated: Date.now(),
   };

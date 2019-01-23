@@ -19,6 +19,7 @@ function handleTestCase(testcase) {
   return new Promise((resolve, reject) => {
     resultHelper.addResult({
       testName: testcase.name,
+      type: null, // TODO: put actual type here when we figure out how to set params in result file
       result: testResult,
       duration: testcase.time * 1000, // seconds -> milliseconds
     }).then(result => {
