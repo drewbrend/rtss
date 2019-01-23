@@ -1,22 +1,9 @@
 import Test from '../models/test';
-import sanitizeHtml from 'sanitize-html';
+const testHelper = require('./helpers/testHelper');
 const ObjectID = require('mongodb').ObjectID;
 
-/**
- * Get all tests
- * @param req
- * @param res
- * @returns void
- */
-export function getAllTests(req, res) {
-  Test.find().sort('-lastUpdated').exec((err, tests) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-    res.json({ tests });
-  });
-}
-
+// TODO: Check if you can pass empty body to this to get all tests
+// If so, delete getAllTests()
 /**
  * Get tests
  * @param req
@@ -24,11 +11,10 @@ export function getAllTests(req, res) {
  * @returns void
  */
 export function getTests(req, res) {
-  Test.find(req.body).sort('-lastUpdated').exec((err, tests) => {
-    if (err) {
-      res.status(500).send(err);
-    }
+  testHelper.getTests(req.body).then(tests => {
     res.json({ tests });
+  }).catch(err => {
+    res.status(500).send(err);
   });
 }
 
@@ -58,18 +44,10 @@ export function addTest(req, res) {
     res.status(403).end();
   }
 
-  const newTest = new Test(req.body.test);
-
-  // Let's sanitize inputs
-  newTest.name = sanitizeHtml(newTest.name);
-  newTest.type = sanitizeHtml(newTest.type);
-  newTest.isStable = sanitizeHtml(newTest.isStable);
-
-  newTest.save((err, saved) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-    res.json({ post: saved });
+  testHelper.addTest(res.body.test).then(saved => {
+    res.json({ test: saved });
+  }).catch(err => {
+    res.status(500).send(err);
   });
 }
 
