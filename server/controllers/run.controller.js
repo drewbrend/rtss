@@ -5,7 +5,7 @@ const parser = require('xml2json');
 const ObjectID = require('mongodb').ObjectID;
 const flattenDeep = require('lodash.flattendeep');
 
-function handleTestCase(testcase) {
+function handleTestCase(testcase, runId) {
   let testResult;
   // TODO: skipped test?
   if (testcase.failure) {
@@ -19,9 +19,9 @@ function handleTestCase(testcase) {
   return new Promise((resolve, reject) => {
     resultHelper.addResult({
       testName: testcase.name,
-      type: null, // TODO: put actual type here when we figure out how to set params in result file
       result: testResult,
       duration: testcase.time * 1000, // seconds -> milliseconds
+      run: runId,
     }).then(result => {
       resolve(result._id);
     }).catch(err => {
@@ -30,7 +30,7 @@ function handleTestCase(testcase) {
   });
 }
 
-function handleResultJson(resultJson) {
+function handleResultJson(resultJson, runId) {
   let suites = resultJson.testsuites;
   if (!Array.isArray(resultJson.testsuites)) {
     suites = [resultJson.testsuites];
@@ -50,7 +50,7 @@ function handleResultJson(resultJson) {
         }
 
         cases.forEach(testcase => {
-          promises.push(handleTestCase(testcase));
+          promises.push(handleTestCase(testcase, runId));
         });
       });
     });
@@ -105,37 +105,47 @@ export function addRun(req, res) {
   }
 
   const fileNames = Object.keys(req.files);
-  const promises = [];
 
   for (let i = 0; i < fileNames.length; i++) {
     const fileName = fileNames[i];
     const fileBuffer = req.files[fileName].data;
     const json = parser.toJson(fileBuffer);
 
-    promises.push(handleResultJson(JSON.parse(json)));
-  }
+    // TODO: .type might be on a child property once it's set up
+    const testType = json.type ? json.type : 'Unknown';
 
-  Promise.all(promises).then(ids => {
-    const flatIds = flattenDeep(ids);
-
-    const newResult = new TestRun({
-      results: flatIds,
+    const newRun = new TestRun({
+      results: [],
+      type: testType,
       job: 'TODO: add job info and duration',
-      runDate: Date.now(),
+      runDate: Date.now(), // TODO: Get this from report
     });
 
-    newResult.job = sanitizeHtml(newResult.job);
+    newRun.type = sanitizeHtml(newRun.type);
+    newRun.job = sanitizeHtml(newRun.job);
 
-    newResult.save((err, saved) => {
-      if (err) {
-        res.status(500).send(err);
+    newRun.save((runErr, saved) => {
+      if (runErr) {
+        res.status(500).send(runErr);
       }
 
-      res.json({ run: saved });
+      const runId = saved._id;
+
+      handleResultJson(JSON.parse(json), runId).then(ids => {
+        const flatIds = flattenDeep(ids);
+
+        TestRun.findOneAndUpdate({ _id: runId }, { results: flatIds }, { new: true }, (updateErr, updatedRun) => {
+          if (updateErr) {
+            res.status(500).send(updateErr);
+          }
+
+          res.json({ result: updatedRun });
+        }).catch(resultErr => {
+          res.status(500).send(resultErr);
+        });
+      });
     });
-  }).catch(errs => {
-    res.status(500).send(errs);
-  });
+  }
 }
 
 /**

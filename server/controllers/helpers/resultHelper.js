@@ -1,38 +1,30 @@
 import sanitizeHtml from 'sanitize-html';
 import TestResult from '../../models/testResult';
-const testHelper = require('./testHelper');
 
 exports.addResult = (result) => {
   const testType = result.type ? result.type : 'Unknown';
 
-  const test = {
-    name: result.testName,
-    type: testType,
-    isStable: true, // We'll assume a new test is stable
-    lastUpdated: Date.now(),
-  };
 
   return new Promise((resolve, reject) => {
-    // addTest will return an existing tests, if there is one
-    testHelper.addTest(test).then(savedTest => {
-      const newResult = new TestResult({
-        test: savedTest._id,
-        result: result.result,
-        duration: result.duration * 1000, // seconds -> milliseconds
-      });
+    const newResult = new TestResult({
+      testName: result.testName,
+      type: testType,
+      result: result.result,
+      duration: result.duration * 1000, // seconds -> milliseconds
+      isStable: true, // TODO: calculate this based on past results
+      run: result.run,
+    });
 
-      newResult.result = sanitizeHtml(newResult.result);
+    newResult.testName = sanitizeHtml(newResult.testName);
+    newResult.type = sanitizeHtml(newResult.type);
+    newResult.result = sanitizeHtml(newResult.result);
 
-      newResult.save((err, saved) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(saved);
-        }
-      });
-    })
-    .catch(err => {
-      reject(err);
+    newResult.save((err, saved) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(saved);
+      }
     });
   });
 };

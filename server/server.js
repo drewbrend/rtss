@@ -48,7 +48,6 @@ import Helmet from 'react-helmet';
 import routes from '../client/routes';
 import { fetchComponentData } from './util/fetchData';
 import posts from './routes/post.routes';
-import tests from './routes/test.routes';
 import results from './routes/result.routes';
 import runs from './routes/run.routes';
 import dummyData from './dummyData';
@@ -76,7 +75,6 @@ app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist/client')));
 app.use('/api', posts);
-app.use('/api', tests);
 app.use('/api', results);
 app.use('/api', runs);
 
@@ -165,7 +163,7 @@ app.use((req, res, next) => {
 // start app
 app.listen(serverConfig.port, (error) => {
   if (!error) {
-    console.log(`Test result server is running on port: ${serverConfig.port}!`); // eslint-disable-line
+    console.log(`Test result server is running on port: ${serverConfig.port}!`); // eslint-disable-line no-console
   }
 });
 
