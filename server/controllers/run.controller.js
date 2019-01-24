@@ -111,17 +111,17 @@ export function addRun(req, res) {
     const fileBuffer = req.files[fileName].data;
     const json = parser.toJson(fileBuffer);
 
-    // TODO: .type might be on a child property once it's set up
-    const testType = json.type ? json.type : 'Unknown';
+    // TODO: .framework might be on a child property once it's set up
+    const testFramework = json.framework ? json.framework : 'Unknown';
 
     const newRun = new TestRun({
       results: [],
-      type: testType,
+      framework: testFramework,
       job: 'TODO: add job info and duration',
       runDate: Date.now(), // TODO: Get this from report
     });
 
-    newRun.type = sanitizeHtml(newRun.type);
+    newRun.framework = sanitizeHtml(newRun.framework);
     newRun.job = sanitizeHtml(newRun.job);
 
     newRun.save((runErr, saved) => {

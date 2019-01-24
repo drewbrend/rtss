@@ -15,7 +15,7 @@ export default function () {
     if (count === 0) {
       const run1 = new TestRun({
         results: [],
-        type: 'Cypress',
+        framework: 'Cypress',
         job: 'some-jenkins-job',
         runDate: Date.now(),
       });
