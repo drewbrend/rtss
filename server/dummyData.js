@@ -1,5 +1,5 @@
-import TestResult from './models/testResult';
 import TestRun from './models/testRun';
+const resultHelper = require('./controllers/helpers/resultHelper');
 
 function seedError(err) {
   console.log(`Error seeding database: ${err}`);// eslint-disable-line no-console
@@ -28,35 +28,29 @@ export default function () {
 
         const runId = saved._id;
 
-        const result1 = new TestResult({
+        const promise1 = resultHelper.addResult({
           testName: 'Dummy Test 1',
           result: 'success',
           duration: 450,
           run: runId,
         });
 
-        const result2 = new TestResult({
+        const promise2 = resultHelper.addResult({
           testName: 'Dummy Test 2',
           result: 'failure',
           duration: 6300,
           run: runId,
         });
 
-        TestResult.create([result1, result2], (resultErr, savedResults) => {
-          if (resultErr) {
-            seedError(resultErr);
-            return;
-          }
-
-          const resultsIds = savedResults.map(r => r._id);
-
+        Promise.all([promise1, promise2]).then(resultsIds => {
           TestRun.updateOne({ _id: runId }, { results: resultsIds }, updateErr => {
             if (updateErr) {
               seedError(updateErr);
             }
-
-            return;
           });
+        }).catch(errs => {
+          seedError(errs);
+          return;
         });
       });
     }
