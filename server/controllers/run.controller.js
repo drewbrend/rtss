@@ -20,6 +20,7 @@ function handleTestCase(testcase, runId) {
     resultHelper.addResult({
       testName: testcase.name,
       result: testResult,
+      message: testcase.failure,
       duration: testcase.time * 1000, // seconds -> milliseconds
       run: runId,
     }).then(result => {
