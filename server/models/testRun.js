@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const testRunSchema = new Schema({
   results: [{ type: mongoose.Schema.Types.ObjectId, ref: 'TestResult' }],
+  framework: { type: 'String', required: true },
   job: { type: 'String', required: true },
   runDate: { type: 'Date', default: Date.now, required: true },
 });
