@@ -10,7 +10,7 @@ exports.addResult = (result) => {
       framework: testFramework,
       result: result.result,
       message: result.message,
-      duration: result.duration, // seconds -> milliseconds
+      duration: result.duration,
       isStable: result.isStable, // TODO: calculate this based on past results
       run: result.run,
     });
