@@ -38,6 +38,7 @@ export default function () {
         const promise2 = resultHelper.addResult({
           testName: 'Dummy Test 2',
           result: 'failure',
+          message: 'something broke',
           duration: 6300,
           run: runId,
         });
