@@ -39,7 +39,7 @@ export function getResult(req, res) {
  * @returns void
  */
 export function addResult(req, res) {
-  if (!req.body.result || !req.body.result.testName || !req.body.post.result || !req.body.post.duration) {
+  if (!req.body.result || !req.body.result.testName || !req.body.result.result || !req.body.result.duration) {
     res.status(400).end();
   }
 

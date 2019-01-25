@@ -161,7 +161,8 @@ app.use((req, res, next) => {
 });
 
 // start app
-app.listen(serverConfig.port, (error) => {
+const serverPort = process.env.NODE_ENV === 'test' ? 0 : serverConfig.port;
+app.listen(serverPort, (error) => {
   if (!error) {
     console.log(`Test result server is running on port: ${serverConfig.port}!`); // eslint-disable-line no-console
   }

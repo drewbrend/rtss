@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Service for viewing and managing test results",
   "scripts": {
-    "test": "cross-env NODE_ENV=test PORT=8080 MONGO_URL=mongodb://localhost:27017/test-results node_modules/.bin/nyc node node_modules/ava/cli.js",
+    "test": "cross-env NODE_ENV=test PORT=8000 MONGO_URL=mongodb://localhost:27017/test-results node_modules/.bin/nyc node node_modules/ava/cli.js --serial",
     "watch:test": "npm run test -- --watch",
     "cover": "nyc npm run test",
     "check-coverage": "nyc check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
