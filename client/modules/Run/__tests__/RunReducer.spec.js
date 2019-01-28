@@ -68,8 +68,8 @@ test('getRuns selector', t => {
 test('getRun selector', t => {
   t.deepEqual(
     getRun({
-      runs: { data: [{ _id: 'id1' }] },
+      runs: { data: [{ id: 'id1' }] },
     }, 'id1'),
-    { _id: 'id1' }
+    { id: 'id1' }
   );
 });

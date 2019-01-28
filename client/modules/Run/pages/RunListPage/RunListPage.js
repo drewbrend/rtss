@@ -16,7 +16,7 @@ class RunListPage extends Component {
     this.props.dispatch(fetchRuns());
   }
 
-  handleDeleteTest = run => {
+  handleDeleteRun = run => {
     if (confirm('Do you want to delete this test run?')) { // eslint-disable-line
       this.props.dispatch(deleteRunRequest(run));
     }

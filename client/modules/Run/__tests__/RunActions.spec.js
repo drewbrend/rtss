@@ -41,12 +41,16 @@ test('fetchRuns action', t => {
       { _id: 'id1', results: ['result-set-1'], framework: 'Cypress', job: 'some-jenkins-job', runDate: '2019-01-28 16:10:56.346Z' },
       { _id: 'id2', results: ['result-set-2'], framework: 'Unknown', job: 'some-other-jenkins-job', runDate: '2019-01-28 17:10:56.346Z' },
     ];
+    const runsResponse = {
+      runs,
+    };
+
     const mockStore = configureStore([thunkMiddleware]);
     const store = mockStore({ data: [] });
     const expectedActions = [{ type: ADD_RUNS, runs }];
     nock(API_URL)
       .get('/runs')
-      .reply(200, runs);
+      .reply(200, runsResponse);
     store.dispatch(fetchRuns())
       .then(() => {
         t.deepEqual(store.getActions(), expectedActions);

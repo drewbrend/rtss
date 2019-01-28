@@ -31,7 +31,7 @@ const RunReducer = (state = initialState, action) => {
 export const getRuns = state => state.runs.data;
 
 // Get run by id
-export const getRun = (state, id) => state.runs.data.filter(run => run._id === id)[0];
+export const getRun = (state, id) => state.runs.data.filter(run => run.id === id)[0];
 
 // Export Reducer
 export default RunReducer;
