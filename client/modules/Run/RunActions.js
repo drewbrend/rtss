@@ -22,8 +22,8 @@ export function addRuns(runs) {
 
 export function fetchRuns() {
   return (dispatch) => {
-    return callApi('runs/').then(res => {
-      dispatch(addRuns(res.runs));
+    return callApi('runs').then(res => {
+      dispatch(addRuns(res));
     });
   };
 }
