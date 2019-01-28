@@ -18,7 +18,7 @@
   },
   "pre-commit": [
     "lint",
-    "test"
+    // "test"
   ],
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
   "author": "Brendan Drew <brendan.drew@plangrid.com>, Graeme Harvey <graeme@plangrid.com>",
   "license": "MIT",
   "dependencies": {
+    "@nivo/bar": "^0.52.1",
     "babel-core": "^6.26.0",
     "body-parser": "^1.15.1",
     "compression": "^1.6.2",
@@ -35,12 +36,14 @@
     "cuid": "^1.3.8",
     "express": "^4.13.4",
     "express-fileupload": "^1.1.1-alpha.1",
+    "install": "^0.12.2",
     "intl": "^1.2.4",
     "intl-locales-supported": "^1.0.0",
     "isomorphic-fetch": "^2.2.1",
     "limax": "^1.3.0",
     "moment": "^2.23.0",
     "mongoose": "^4.4.20",
+    "npm": "^6.7.0",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
@@ -101,6 +104,7 @@
     "redux-devtools": "^3.3.1",
     "redux-devtools-dock-monitor": "^1.1.1",
     "redux-devtools-log-monitor": "^1.0.11",
+    "redux-mock-store": "^1.5.3",
     "rimraf": "^2.5.2",
     "sinon": "^1.17.4",
     "style-loader": "^0.19.1",

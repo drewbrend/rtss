@@ -43,21 +43,21 @@ test('doesn\'t add post in pages other than home', t => {
   t.is(wrapper.find('a').length, 0);
 });
 
-test('toggleAddTest called properly', t => {
-  const router = {
-    isActive: sinon.stub().returns(true),
-  };
-  const toggleAddTest = sinon.spy();
-  const wrapper = shallow(
-    <Header switchLanguage={() => {}} intl={intlProp} toggleAddTest={toggleAddTest} />,
-    {
-      context: {
-        router,
-        intl,
-      },
-    }
-  );
+// test('toggleAddTest called properly', t => {
+//   const router = {
+//     isActive: sinon.stub().returns(true),
+//   };
+//   const toggleAddTest = sinon.spy();
+//   const wrapper = shallow(
+//     <Header switchLanguage={() => {}} intl={intlProp} toggleAddTest={toggleAddTest} />,
+//     {
+//       context: {
+//         router,
+//         intl,
+//       },
+//     }
+//   );
 
-  wrapper.find('a').first().simulate('click');
-  t.truthy(toggleAddTest.calledOnce);
-});
+//   wrapper.find('a').first().simulate('click');
+//   t.truthy(toggleAddTest.calledOnce);
+// });
