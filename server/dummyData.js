@@ -28,22 +28,21 @@ function generateTestNamePool() {
 }
 
 function makeRun() {
-  let savedId;
-  const run = new TestRun({
-    results: [],
-    framework: randomFramework(),
-    job: `jenkins-job-${Math.floor(Math.random() * 5) + 1}`,
-    runDate: faker.date.past(),
-  });
+  return new Promise((resolve, reject) => {
+    const run = new TestRun({
+      results: [],
+      framework: randomFramework(),
+      job: `jenkins-job-${Math.floor(Math.random() * 5) + 1}`,
+      runDate: faker.date.past(),
+    });
 
-  run.save((runErr, saved) => {
-    if (runErr) {
-      seedError(runErr);
-      return;
-    }
-    savedId = saved._id;
+    run.save((runErr, saved) => {
+      if (runErr) {
+        reject(runErr);
+      }
+      resolve(saved._id);
+    });
   });
-  return savedId;
 }
 
 function makeResult(testName, runId) {
@@ -58,25 +57,30 @@ function makeResult(testName, runId) {
 
 function makeEntries() {
   const testNamePool = generateTestNamePool();
-  const testResults = [];
   for (let x = 0; x < numRuns; x++) {
-    const runId = makeRun();
-    const availableTestNames = testNamePool.slice();
-    for (let y = 0; y < numTests; y++) {
-      const testName = availableTestNames.pop();
-      const result = makeResult(testName, runId);
-      if (result) {
-        testResults.push(result);
-      }
-    }
-    Promise.all(testResults).then(resultsIds => {
-      TestRun.updateOne({ _id: runId }, { results: resultsIds }, updateErr => {
-        if (updateErr) {
-          seedError(updateErr);
+    const testResults = [];
+    makeRun().then((runId) => {
+      const availableTestNames = testNamePool.slice(); // slice creates a copy of the array
+      for (let y = 0; y < numTests; y++) {
+        const testName = availableTestNames.pop();
+        const result = makeResult(testName, runId);
+        if (result) {
+          testResults.push(result);
         }
+      }
+
+      Promise.all(testResults).then(resultsIds => {
+        TestRun.updateOne({ _id: runId }, { results: resultsIds.map(r => r._id) }, updateErr => {
+          if (updateErr) {
+            seedError(updateErr);
+          }
+        });
+      }).catch(errs => {
+        seedError(errs);
+        return;
       });
-    }).catch(errs => {
-      seedError(errs);
+    }).catch(err => {
+      seedError(err);
       return;
     });
   }
