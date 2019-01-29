@@ -24,7 +24,6 @@ test.afterEach.always(async () => {
   await dropDB();
 });
 
-// From here
 test.serial('Should correctly give number of test results', async t => {
   t.plan(2);
 
