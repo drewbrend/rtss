@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const testResultSchema = new Schema({
   testName: { type: 'String', required: true },
+  framework: { type: 'String', required: false },
   result: { type: 'String', required: true },
   message: { type: 'String', required: false },
   duration: { type: 'Number', required: true },
