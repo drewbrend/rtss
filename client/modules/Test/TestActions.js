@@ -34,7 +34,7 @@ export function addTests(tests) {
 
 export function fetchTests() {
   return (dispatch) => {
-    return callApi('tests/all').then(res => {
+    return callApi('tests/').then(res => {
       dispatch(addTests(res.tests));
     });
   };

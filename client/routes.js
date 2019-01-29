@@ -18,6 +18,8 @@ if (process.env.NODE_ENV !== 'production') {
   // Require async routes only in development for react-hot-reloader to work.
   require('./modules/Test/pages/TestListPage/TestListPage');
   require('./modules/Test/pages/TestDetailPage/TestDetailPage');
+  require('./modules/Run/pages/RunListPage/RunListPage');
+  require('./modules/Run/pages/RunDetailPage/RunDetailPage');
 }
 
 // react-router setup with code-splitting
@@ -27,7 +29,7 @@ export default (
     <IndexRoute
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./modules/Test/pages/TestListPage/TestListPage').default);
+          cb(null, require('./modules/Run/pages/RunListPage/RunListPage').default);
         });
       }}
     />
@@ -36,6 +38,22 @@ export default (
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
           cb(null, require('./modules/Test/pages/TestDetailPage/TestDetailPage').default);
+        });
+      }}
+    />
+    <Route
+      path="/tests/"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Test/pages/TestListPage/TestListPage').default);
+        });
+      }}
+    />
+    <Route
+      path="/runs/:id"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Run/pages/RunDetailPage/RunDetailPage').default);
         });
       }}
     />
