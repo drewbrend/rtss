@@ -12,7 +12,9 @@ import {
   addRun,
   deleteRun,
   addRuns,
+  fetchRun,
   fetchRuns,
+  deleteRunRequest,
 } from '../RunActions';
 
 const run = { _id: 'id', results: ['result-set-1'], framework: 'Cypress', job: 'some-jenkins-job', runDate: '2019-01-28 16:10:56.346Z' };
@@ -52,6 +54,46 @@ test('fetchRuns action', t => {
       .get('/runs')
       .reply(200, runsResponse);
     store.dispatch(fetchRuns())
+      .then(() => {
+        t.deepEqual(store.getActions(), expectedActions);
+        resolve();
+      });
+  });
+});
+
+test('fetchRun action', t => {
+  return new Promise(resolve => {
+    const runResponse = {
+      run,
+    };
+
+    const mockStore = configureStore([thunkMiddleware]);
+    const store = mockStore({ data: [] });
+    const expectedActions = [{ type: ADD_RUN, run }];
+    nock(API_URL)
+      .get(`/runs/${run._id}`)
+      .reply(200, runResponse);
+    store.dispatch(fetchRun(run._id))
+      .then(() => {
+        t.deepEqual(store.getActions(), expectedActions);
+        resolve();
+      });
+  });
+});
+
+test('deleteRunRequest action', t => {
+  return new Promise(resolve => {
+    const deleteResponse = {
+      id: run._id,
+    };
+
+    const mockStore = configureStore([thunkMiddleware]);
+    const store = mockStore({ data: [] });
+    const expectedActions = [{ type: DELETE_RUN, id: run._id }];
+    nock(API_URL)
+      .delete(`/runs/${run._id}`)
+      .reply(200, deleteResponse);
+    store.dispatch(deleteRunRequest(run._id))
       .then(() => {
         t.deepEqual(store.getActions(), expectedActions);
         resolve();
