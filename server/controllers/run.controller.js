@@ -71,12 +71,15 @@ function handleResultJson(resultJson, runId) {
  * @returns void
  */
 export function getRuns(req, res) {
-  TestRun.find(req.body).sort('-runDate').exec((err, runs) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-    res.json({ runs });
-  });
+  TestRun.find(req.body)
+         .sort('-runDate')
+         .populate('results')
+         .exec((err, runs) => {
+           if (err) {
+             res.status(500).send(err);
+           }
+           res.json({ runs });
+         });
 }
 
 /**

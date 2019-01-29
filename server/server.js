@@ -64,8 +64,10 @@ if (process.env.NODE_ENV !== 'test') {
       throw error;
     }
 
-    // feed some dummy data in DB.
-    dummyData();
+    // feed some dummy data in DB if in a development env *only*
+    if (process.env.NODE_ENV === 'development') {
+      dummyData();
+    }
   });
 }
 

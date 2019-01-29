@@ -5,6 +5,7 @@ import Helmet from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import { VictoryBar, VictoryChart, VictoryTheme, VictoryAxis } from 'victory';
+const countBy = require('lodash.countby');
 
 // Import Style
 import styles from '../../components/RunListItem/RunListItem.css';
@@ -15,18 +16,18 @@ import { fetchRun } from '../../RunActions';
 // Import Selectors
 import { getRun } from '../../RunReducer';
 
-// Fake chart data to placehold until Results Reducer is working
-const data = [
-  { count: 4, testResult: 'success' },
-  { count: 2, testResult: 'failure' },
-];
-
 export function RunDetailPage(props) {
+  const counts = countBy(props.run.results, 'result');
+  const data = [
+    { count: counts.failure, testResult: 'Failed' },
+    { count: counts.success, testResult: 'Passed' },
+  ];
   return (
     <div>
       <Helmet title={props.run.job} />
       <div className={`${styles['single-test']} ${styles['test-detail']}`}>
         <h3 className={styles['test-title']}>{props.run.job}</h3>
+        <p className={styles['author-name']}><FormattedMessage id="testResult" /> {(counts.failure > 0) ? 'FAILED' : 'PASSED'}</p>
         <p className={styles['author-name']}><FormattedMessage id="testType" /> {props.run.framework}</p>
         <p className={styles['test-desc']}>{moment(props.run.runDate).format('MMMM Do YYYY, h:mm a')}</p>
       </div>
@@ -38,11 +39,11 @@ export function RunDetailPage(props) {
         >
           <VictoryAxis
             tickValues={[1, 2]}
-            tickFormat={['Pass', 'Fail']}
+            tickFormat={(d) => d.testResult}
           />
           <VictoryAxis
             dependentAxis
-            tickFormat={(t) => `${Math.round(t)}`}
+            tickFormat={(t) => `${~~t}`}
           />
           <VictoryBar
             data={data}
@@ -52,7 +53,7 @@ export function RunDetailPage(props) {
             style={{
               data: {
                 fill: (d) => {
-                  return d.testResult === 'failure' ? '#FF0000' : '#0000FF';
+                  return d === 'failure' ? '#FF0000' : '#0000FF';
                 },
               },
             }}
