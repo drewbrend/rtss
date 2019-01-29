@@ -17,7 +17,8 @@ class RunListPage extends Component {
   }
 
   handleDeleteRun = run => {
-    if (confirm('Do you want to delete this test run?')) { // eslint-disable-line
+    // eslint-disable-next-line no-alert
+    if (confirm('Do you want to delete this test run?')) {
       this.props.dispatch(deleteRunRequest(run));
     }
   };
@@ -44,7 +45,7 @@ function mapStateToProps(state) {
 RunListPage.propTypes = {
   runs: PropTypes.arrayOf(PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    results: PropTypes.array.isRequired, // TODO: This is not of type string. Arry of objectIds?
+    results: PropTypes.array.isRequired, // TODO: This is an array of references. Need to get the real data somewhere.
     framework: PropTypes.string.isRequired,
     job: PropTypes.string.isRequired,
     runDate: PropTypes.string.isRequired,

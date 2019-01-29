@@ -42,7 +42,7 @@ function mapStateToProps(state, props) {
 RunDetailPage.propTypes = {
   run: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    results: PropTypes.array.isRequired, // TODO: This is not of type string. Arry of objectIds?
+    results: PropTypes.array.isRequired, // TODO: This is an array of references. Need to get the real data somewhere.
     framework: PropTypes.string.isRequired,
     job: PropTypes.string.isRequired,
     runDate: PropTypes.string.isRequired,

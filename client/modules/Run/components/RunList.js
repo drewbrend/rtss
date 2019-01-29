@@ -5,14 +5,8 @@ import PropTypes from 'prop-types';
 import RunListItem from './RunListItem/RunListItem';
 
 function RunList(props) {
-  if (!props.runs) {
-    return (
-      <div className="emptyRunList">
-        <p>There are currently no runs in the DB.</p>
-      </div>);
-  // eslint-disable-next-line no-else-return
-  } else {
-    return (
+  return (
+    props.runs &&
       <div className="listView">
         {
           props.runs.map(run => (
@@ -24,14 +18,13 @@ function RunList(props) {
           ))
         }
       </div>
-    );
-  }
+  );
 }
 
 RunList.propTypes = {
   runs: PropTypes.arrayOf(PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    results: PropTypes.array.isRequired, // TODO: This is not of type string. Arry of objectIds?
+    results: PropTypes.array.isRequired, // TODO: This is an array of references. Need to get the real data somewhere.
     framework: PropTypes.string.isRequired,
     job: PropTypes.string.isRequired,
     runDate: PropTypes.string.isRequired,

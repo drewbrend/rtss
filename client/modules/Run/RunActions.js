@@ -20,6 +20,13 @@ export function addRuns(runs) {
   };
 }
 
+export function deleteRun(id) {
+  return {
+    type: DELETE_RUN,
+    id,
+  };
+}
+
 export function fetchRuns() {
   return (dispatch) => {
     return callApi('runs').then(res => {
@@ -31,13 +38,6 @@ export function fetchRuns() {
 export function fetchRun(id) {
   return (dispatch) => {
     return callApi(`runs/${id}`).then(res => dispatch(addRun(res.run)));
-  };
-}
-
-export function deleteRun(id) {
-  return {
-    type: DELETE_RUN,
-    id,
   };
 }
 

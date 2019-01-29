@@ -28,7 +28,6 @@
   "author": "Brendan Drew <brendan.drew@plangrid.com>, Graeme Harvey <graeme@plangrid.com>",
   "license": "MIT",
   "dependencies": {
-    "@nivo/bar": "^0.52.1",
     "babel-core": "^6.26.0",
     "body-parser": "^1.15.1",
     "compression": "^1.6.2",
